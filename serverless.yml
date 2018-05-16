@@ -8,18 +8,18 @@ provider:
   name: aws
   runtime: nodejs6.10
   stage: dev
-  region: us-east-1
-  versionFunctions: false
-  
+  region: {env:REGION}
+  versionFunctions: true
+
 functions:
   ship-logs-to-logzio:
     handler: functions/ship-logs/handler.handler
     description: Sends CloudWatch logs to Logz.io
     memorySize: 128
     environment:
-      logstash_host: <INSERT VALUE HERE>
-      logstash_port: <INSERT VALUE HERE>
-      token: <INSERT VALUE HERE>
+      logstash_host: ${env:LOGSTASH_HOST}
+      logstash_port: ${env:LOGSTASH_PORT}
+      token: ${env:LOGSTASH_TOKEN}
 
   set-retention:
     handler: functions/set-retention/handler.handler
