@@ -39,9 +39,13 @@ variable "lambda_git_repo" {
 
 variable "name" {
   description = "Name taht will be used by pipeline and other resrouces"
-  default     = "logz_integration_lambda"
+  default     = "logz-integration-lambda"
 }
 
 variable "tags" {
   type = "map"
+}
+
+variable "cloudwatch_logs_prefix" {
+  description = "This prefix will be used to filter logs in cloudwatch that should be shipped to logz.io"
 }

@@ -52,7 +52,7 @@ functions:
     environment:
       dest_func: "${self:service}-${self:provider.stage}-ship-logs-to-logzio"
       account_id: "#{AWS::AccountId}"
-      prefix: "/aws/lambda"
+      prefix: ${env:CLOUDWATCH_LOGS_PREFIX}
     iamRoleStatements:
       - Effect: "Allow"
         Action:

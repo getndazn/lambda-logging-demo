@@ -1,8 +1,8 @@
 aws_account = "144992683770"
 
-aws_region = "eu-central-1"
+aws_region = "us-east-1"
 
-logz_io_token_kms_ciphertext = "AQICAHg1sN7P6Forb8P2tSpreouMMTAT4OHXg+VKyGjIM4IKmgGe895etEZ82Jy4TsTLmgf1AAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMzuV7kmiqJUxtW22eAgEQgDsUCaPTZfQRXVEdHffPOLEjZBxY9ylzDAKFfauaHW5ZY5MDzhDp20/2xdUeg7y6pkBp8g2simaW+cOPog=="
+logz_io_token_kms_ciphertext = "AQICAHhD1yo1cd/ga2IBKjYEQfG4kW0XktIc1ACWBWa2KlbyZwHY10MPZEtIzSvBMW2yHLHmAAAAfjB8BgkqhkiG9w0BBwagbzBtAgEAMGgGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMr7svx0qyPX0rdtoHAgEQgDsbt/pkIr+xniq2L3UzIOY+cdciJ2h3uWEEXH+Oc/OdoRR1xrfKcRqAsnlKTUttyIArls8APRZR+/XY+g=="
 
 lambda_git_owner = "getndazn"
 
@@ -14,3 +14,5 @@ tags = {
   Application = "dazndev"
   Description = "log shipping lambda"
 }
+
+cloudwatch_logs_prefix = "/aws/lambda"

@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "source" {
-  bucket = "${var.stage}-${var.name}-pipeline"
+  bucket = "${var.stage}-${var.name}-pipeline-lambdas"
   acl    = "private"
 
   tags = "${var.tags}"
@@ -45,7 +45,7 @@ resource "aws_codebuild_project" "dazndev_build" {
     compute_type = "BUILD_GENERAL1_SMALL"
 
     // https://docs.aws.amazon.com/codebuild/latest/userguide/build-env-ref-available.html
-    image           = "aws/codebuild/docker:17.09.0"
+    image           = "aws/codebuild/nodejs:6.3.1"
     type            = "LINUX_CONTAINER"
     privileged_mode = true
 
@@ -62,6 +62,11 @@ resource "aws_codebuild_project" "dazndev_build" {
     environment_variable {
       name  = "LOGSTASH_TOKEN"
       value = "${data.aws_kms_secret.logstash.token}"
+    }
+
+    environment_variable {
+      name  = "CLOUDWATCH_LOGS_PREFIX"
+      value = "${var.cloudwatch_logs_prefix}"
     }
   }
 
