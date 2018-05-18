@@ -29,12 +29,10 @@ let tryParseJson = function (str) {
 //    "END RequestId: 5e665f81-641f-11e6-ab0f-b1affae60d28\n"
 //    "REPORT RequestId: 5e665f81-641f-11e6-ab0f-b1affae60d28\tDuration: 1095.52 ms\tBilled Duration: 1100 ms \tMemory Size: 128 MB\tMax Memory Used: 32 MB\t\n"
 let parseLogMessage = function (logEvent) {
-  console.log("LOG_EVENT IS ", logEvent);
   if (logEvent.message.startsWith('START RequestId') ||
       logEvent.message.startsWith('END RequestId') ||
       logEvent.message.startsWith('REPORT RequestId')) {
 
-    console.log("RETURNING NULL");
     return null;
   }
 
@@ -47,8 +45,11 @@ let parseLogMessage = function (logEvent) {
   if (fields) {
     fields.requestId = requestId;
 
-    console.log("fields.level  is ", fields.level );
-    let level = (fields.level || 'debug').toLowerCase();
+    let level = 'debug';
+    if (fields.level) {
+      level = JSON.stringify(fields.level);
+    }
+
     let message = fields.message;
 
     // level and message are lifted out, so no need to keep them there
