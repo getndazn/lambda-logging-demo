@@ -32,6 +32,7 @@ let parseLogMessage = function (logEvent) {
   if (logEvent.message.startsWith('START RequestId') ||
       logEvent.message.startsWith('END RequestId') ||
       logEvent.message.startsWith('REPORT RequestId')) {
+
     return null;
   }
 
@@ -39,14 +40,18 @@ let parseLogMessage = function (logEvent) {
   let timestamp = parts[0];
   let requestId = parts[1];
   let event     = parts[2];
-  
+
   let fields = tryParseJson(event);
   if (fields) {
     fields.requestId = requestId;
 
-    let level = (fields.level || 'debug').toLowerCase();
+    let level = 'debug';
+    if (fields.level) {
+      level = JSON.stringify(fields.level);
+    }
+
     let message = fields.message;
-  
+
     // level and message are lifted out, so no need to keep them there
     delete fields.level;
     delete fields.message;
