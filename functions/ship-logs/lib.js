@@ -18,7 +18,12 @@ let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
   let lambdaVersion = parse.lambdaVersion(logStream);
   let functionName  = parse.functionName(logGroup);
 
-  const token = yield ssm.getParameter(ssmParams).promise();
+  console.log("Before parameter yield ", token);
+
+  const token = yield ssm.getParameter(ssmParams).promise().catch( err => {
+    console.log("Got error while catching token ", err);
+    return "";
+  });
 
   console.log("token is ", token);
 
