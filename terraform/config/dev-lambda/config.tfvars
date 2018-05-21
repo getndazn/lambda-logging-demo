@@ -8,7 +8,7 @@ lambda_git_owner = "getndazn"
 
 stage = "dev"
 
-lambda_git_branch = "feature/terraform-pipeline"
+lambda_git_branch = "master"
 
 tags = {
   Application = "dazndev"
