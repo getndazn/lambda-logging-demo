@@ -21,6 +21,16 @@
         "lambda:*",
         "s3:*"
       ]
+    },
+    {
+      "Effect" : "Allow",
+      "Resource": [
+        "arn:aws:iam::${accountId}:role/cloudwatch-logs-${stage}-ship-logs-to-logzio-${region}-lambdaRole"
+      ],
+      "Action": [
+        "iam:CreateRole",
+        "iam:PutRolePolicy"
+      ]
     }
   ]
 }

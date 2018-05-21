@@ -1,8 +1,13 @@
+
+data "aws_caller_identity" "current" {}
+
 data "template_file" "codebuild_policy" {
   template = "${file("${path.module}/policies/codebuild_policy.json")}"
 
   vars {
-    aws_s3_bucket_arn = "${aws_s3_bucket.source.arn}"
+    region = "${var.aws_region}"
+    stage = "${var.stage}"
+    accountId = "${data.aws_caller_identity.current.account_id}"
   }
 }
 
