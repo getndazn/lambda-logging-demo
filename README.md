@@ -8,12 +8,15 @@ A group of Lambda functions for:
 
 ## Deployment with code pipeline
 
-Deployment for lambda logs shipping, if you are adding another resource for which logs should be shipped then just add new directory under `terraform/deployment/config` and add new `remote` and `tfvars` files
+Deployment for lambda logs shipping, if you are adding another resource for which logs should be shipped then just add new directory under `terraform/deployment/config` and add new `remote` and `tfvars` files.
 
-below example is for `dev-labmda`
+Deployment needs encrypted logz.io token stored in parameter store, name of key from parameter store is passed into `/dev/lambda/logzio-token` variable.
+
+below example is for `dev-lambda`:
 
 ```bash
 cd terraform
+export GITHUB_TOKEN=token_with_access_to_repo # required for the first launch time, later can be omitted
 rm -rf ./.terraform # needed when you are switching between backends
 terraform init -backend -backend-config=config/dev-lambda/config.remote
 terraform apply -var-file=config/dev-lambda/config.tfvars
