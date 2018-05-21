@@ -1,5 +1,6 @@
 'use strict';
 
+const AWS     = require('aws-sdk');
 const co      = require('co');
 const Promise = require('bluebird');
 const parse   = require('./parse');
@@ -7,7 +8,7 @@ const net     = require('net');
 const host    = process.env.logstash_host;
 const port    = process.env.logstash_port;
 
-const ssm = new require('AWS').SSM();
+const ssm = new AWS.SSM();
 const ssmParams = {
   Name: process.env.SSM_LOGZ_IO_TOKEN_KEY,
   WithDecryption: true
@@ -17,12 +18,13 @@ let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
   let lambdaVersion = parse.lambdaVersion(logStream);
   let functionName  = parse.functionName(logGroup);
 
-  console.log("Before parameter yield ", token);
-
-  const token = yield ssm.getParameter(ssmParams).promise().catch( err => {
-    console.log("Got error while catching token ", err);
-    return "";
-  });
+  const token = yield ssm.getParameter(ssmParams)
+    .promise()
+    .then( data => data.Parameter.Value)
+    .catch( err => {
+      console.error("Got error while catching token ", err);
+      throw err;
+    });
 
   console.log("token is ", token);
 
