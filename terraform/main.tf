@@ -15,21 +15,6 @@ data "template_file" "buildspec" {
 }
 
 /*
-* Secret
-*/
-
-data "aws_kms_secret" "logstash" {
-  secret {
-    name    = "token"
-    payload = "${var.logz_io_token_kms_ciphertext}"
-
-    context {
-      env = "${var.stage}"
-    }
-  }
-}
-
-/*
 /* CodeBuild
 */
 resource "aws_codebuild_project" "dazndev_build" {
@@ -60,8 +45,8 @@ resource "aws_codebuild_project" "dazndev_build" {
     }
 
     environment_variable {
-      name  = "LOGSTASH_TOKEN"
-      value = "${data.aws_kms_secret.logstash.token}"
+      name  = "SSM_LOGZ_IO_TOKEN_KEY"
+      value = "${var.ssm_logz_io_token_key}"
     }
 
     environment_variable {

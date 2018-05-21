@@ -3,6 +3,7 @@ service: cloudwatch-logs
 plugins:
  - serverless-pseudo-parameters
  - serverless-iam-roles-per-function
+ - serverless-kms-secrets
 
 provider:
   name: aws
@@ -19,7 +20,13 @@ functions:
     environment:
       logstash_host: ${env:LOGSTASH_HOST}
       logstash_port: ${env:LOGSTASH_PORT}
-      token: ${env:LOGSTASH_TOKEN}
+      SSM_LOGZ_IO_TOKEN_KEY: ${env:SSM_LOGZ_IO_TOKEN_KEY}
+    iamRoleStatement:
+      - Effect: "Allow"
+        Action:
+          - "ssm:GetParameters"
+          - "ssm:GetParameter"
+        Resource: arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/${env:SSM_LOGZ_IO_TOKEN_KEY}
 
   set-retention:
     handler: functions/set-retention/handler.handler

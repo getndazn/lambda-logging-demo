@@ -18,8 +18,8 @@ variable "logstash_port" {
   default     = "5050"
 }
 
-variable "logz_io_token_kms_ciphertext" {
-  description = "Token used by lambda to authenticate"
+variable "ssm_logz_io_token_key" {
+  description = "ssm path to logz.io ciphered token"
 }
 
 variable "lambda_git_branch" {
