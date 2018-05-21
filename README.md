@@ -19,6 +19,19 @@ terraform init -backend -backend-config=config/dev-lambda/config.remote
 terraform apply -var-file=config/dev-lambda/config.tfvars
 ```
 
+if you are running terraform for the first time you will see error
+```
+[ERROR] Error updating CodePipeline (dev-logz-integration-lambda): InvalidActionDeclarationException: Action configuration for action 'Source' is missing required configuration 'OAuthToken'
+```
+
+then before `terraform apply` you need to export github token variable:
+```
+export GITHUB_TOKEN=token_with_access_to_repo
+```
+
+You can generate such token in github settings page of your account.
+
+
 ## Deployment
 
 1. insert the `logstash_host`, `logstash_port` and `token` in the `serverless.yml` file (under the `ship-logs-to-logzio` function's environment variables).
