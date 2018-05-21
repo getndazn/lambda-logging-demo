@@ -10,7 +10,7 @@ const port    = process.env.logstash_port;
 
 const ssm = new AWS.SSM();
 const ssmParams = {
-  Name: process.env.SSM_LOGZ_IO_TOKEN_KEY,
+  Name: process.env.ssm_logz_io_token_key,
   WithDecryption: true
 };
 
@@ -20,11 +20,7 @@ let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
 
   const token = yield ssm.getParameter(ssmParams)
     .promise()
-    .then( data => data.Parameter.Value)
-    .catch( err => {
-      console.error("Got error while catching token ", err);
-      throw err;
-    });
+    .then( data => data.Parameter.Value);
 
   console.log("token is ", token);
 

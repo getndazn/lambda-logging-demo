@@ -19,8 +19,8 @@ functions:
     environment:
       logstash_host: ${env:LOGSTASH_HOST}
       logstash_port: ${env:LOGSTASH_PORT}
-      SSM_LOGZ_IO_TOKEN_KEY: ${env:SSM_LOGZ_IO_TOKEN_KEY}
-    iamRoleStatement:
+      ssm_logz_io_token_key: ${env:SSM_LOGZ_IO_TOKEN_KEY}
+    iamRoleStatements:
       - Effect: "Allow"
         Action:
           - "ssm:GetParameters"
