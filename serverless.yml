@@ -25,7 +25,12 @@ functions:
         Action:
           - "ssm:GetParameters"
           - "ssm:GetParameter"
-        Resource: arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/${env:SSM_LOGZ_IO_TOKEN_KEY}
+        Resource: "arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/*"
+      - Effect: "Allow"
+        Action:
+         - "kms:DescribeKey"
+         - "kms:Decrypt"
+        Resource: "*"
 
   set-retention:
     handler: functions/set-retention/handler.handler

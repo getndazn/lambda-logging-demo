@@ -16,6 +16,8 @@
         "kms:Decrypt",
         "cloudformation:*",
         "events:DescribeRule",
+        "ssm:GetParameters",
+        "ssm:GetParameter",
         "lambda:*",
         "s3:*"
       ]
