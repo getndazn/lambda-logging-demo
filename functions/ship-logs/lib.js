@@ -14,15 +14,17 @@ const ssmParams = {
   WithDecryption: true
 };
 
+let token;
+
 let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
   let lambdaVersion = parse.lambdaVersion(logStream);
   let functionName  = parse.functionName(logGroup);
 
-  const token = yield ssm.getParameter(ssmParams)
-    .promise()
-    .then( data => data.Parameter.Value);
-
-  console.log("token is ", token);
+  if ( !token ) {
+    token = yield ssm.getParameter(ssmParams)
+      .promise()
+      .then( data => data.Parameter.Value);
+  }
 
   yield new Promise((resolve, reject) => {
     let socket = net.connect(port, host, function() {
@@ -55,4 +57,6 @@ let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
   });
 });
 
+
 module.exports = processAll;
+
