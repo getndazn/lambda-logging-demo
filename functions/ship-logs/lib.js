@@ -1,16 +1,30 @@
 'use strict';
 
+const AWS     = require('aws-sdk');
 const co      = require('co');
 const Promise = require('bluebird');
 const parse   = require('./parse');
 const net     = require('net');
 const host    = process.env.logstash_host;
 const port    = process.env.logstash_port;
-const token   = process.env.token;
+
+const ssm = new AWS.SSM();
+const ssmParams = {
+  Name: process.env.ssm_logz_io_token_key,
+  WithDecryption: true
+};
+
+let token;
 
 let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
   let lambdaVersion = parse.lambdaVersion(logStream);
   let functionName  = parse.functionName(logGroup);
+
+  if ( !token ) {
+    token = yield ssm.getParameter(ssmParams)
+      .promise()
+      .then( data => data.Parameter.Value);
+  }
 
   yield new Promise((resolve, reject) => {
     let socket = net.connect(port, host, function() {
@@ -30,7 +44,7 @@ let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
 
             socket.write(JSON.stringify(log) + '\n');
           }
-        
+
         } catch (err) {
           console.error(err.message);
         }
@@ -43,4 +57,6 @@ let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
   });
 });
 
+
 module.exports = processAll;
+

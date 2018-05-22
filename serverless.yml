@@ -8,18 +8,29 @@ provider:
   name: aws
   runtime: nodejs6.10
   stage: dev
-  region: us-east-1
-  versionFunctions: false
-  
+  region: {env:REGION}
+  versionFunctions: true
+
 functions:
   ship-logs-to-logzio:
     handler: functions/ship-logs/handler.handler
     description: Sends CloudWatch logs to Logz.io
     memorySize: 128
     environment:
-      logstash_host: <INSERT VALUE HERE>
-      logstash_port: <INSERT VALUE HERE>
-      token: <INSERT VALUE HERE>
+      logstash_host: ${env:LOGSTASH_HOST}
+      logstash_port: ${env:LOGSTASH_PORT}
+      ssm_logz_io_token_key: ${env:SSM_LOGZ_IO_TOKEN_KEY}
+    iamRoleStatements:
+      - Effect: "Allow"
+        Action:
+          - "ssm:GetParameters"
+          - "ssm:GetParameter"
+        Resource: "arn:aws:ssm:#{AWS::Region}:#{AWS::AccountId}:parameter/*"
+      - Effect: "Allow"
+        Action:
+         - "kms:DescribeKey"
+         - "kms:Decrypt"
+        Resource: "*"
 
   set-retention:
     handler: functions/set-retention/handler.handler
@@ -52,7 +63,7 @@ functions:
     environment:
       dest_func: "${self:service}-${self:provider.stage}-ship-logs-to-logzio"
       account_id: "#{AWS::AccountId}"
-      prefix: "/aws/lambda"
+      prefix: ${env:CLOUDWATCH_LOGS_PREFIX}
     iamRoleStatements:
       - Effect: "Allow"
         Action:

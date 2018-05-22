@@ -1,0 +1,36 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Resource": [
+        "*"
+      ],
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "iam:PassRole",
+        "iam:GetRole",
+        "kms:DescribeKey",
+        "kms:Decrypt",
+        "cloudformation:*",
+        "events:DescribeRule",
+        "ssm:GetParameters",
+        "ssm:GetParameter",
+        "lambda:*",
+        "s3:*"
+      ]
+    },
+    {
+      "Effect" : "Allow",
+      "Resource": [
+        "arn:aws:iam::${accountId}:role/cloudwatch-logs-${stage}-ship-logs-to-logzio-${region}-lambdaRole"
+      ],
+      "Action": [
+        "iam:CreateRole",
+        "iam:PutRolePolicy"
+      ]
+    }
+  ]
+}

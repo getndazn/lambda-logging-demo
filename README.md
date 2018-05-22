@@ -5,6 +5,36 @@ A group of Lambda functions for:
 * auto-subscribe new log groups to the aforementioned function so you don't have to subscribe them manually
 * auto-updates the retention policy of new log groups to 7 days (configurable)
 
+
+## Deployment with code pipeline
+
+Deployment for lambda logs shipping, if you are adding another resource for which logs should be shipped then just add new directory under `terraform/deployment/config` and add new `remote` and `tfvars` files.
+
+Deployment needs encrypted logz.io token stored in parameter store, name of key from parameter store is passed into `/dev/lambda/logzio-token` variable.
+
+below example is for `dev-lambda`:
+
+```bash
+cd terraform
+export GITHUB_TOKEN=token_with_access_to_repo # required for the first launch time, later can be omitted
+rm -rf ./.terraform # needed when you are switching between backends
+terraform init -backend -backend-config=config/dev-lambda/config.remote
+terraform apply -var-file=config/dev-lambda/config.tfvars
+```
+
+if you are running terraform for the first time you will see error
+```
+[ERROR] Error updating CodePipeline (dev-logz-integration-lambda): InvalidActionDeclarationException: Action configuration for action 'Source' is missing required configuration 'OAuthToken'
+```
+
+then before `terraform apply` you need to export github token variable:
+```
+export GITHUB_TOKEN=token_with_access_to_repo
+```
+
+You can generate such token in github settings page of your account.
+
+
 ## Deployment
 
 1. insert the `logstash_host`, `logstash_port` and `token` in the `serverless.yml` file (under the `ship-logs-to-logzio` function's environment variables).
