@@ -1,16 +1,18 @@
 aws_account = "728650748678"
 
-aws_region = "eu-central-1"
+aws_region = "us-east-1"
 
-logz_io_token_kms_ciphertext = "TODO"
-
-lambda_git_branch = "master"
+ssm_logz_io_token_key = "/prod/lambda/logzio-token"
 
 lambda_git_owner = "getndazn"
 
 stage = "prod"
 
+lambda_git_branch = "master"
+
 tags = {
   Application = "dazndev"
   Description = "log shipping lambda"
 }
+
+cloudwatch_logs_prefix = "/aws/lambda"
