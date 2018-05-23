@@ -28,7 +28,7 @@
     {
       "Effect" : "Allow",
       "Resource": [
-        "arn:aws:iam::${accountId}:role/cloudwatch-logs-${stage}-*${region}-lambdaRole"
+        "arn:aws:iam::${accountId}:role/${name}-${stage}-*${region}-lambdaRole"
       ],
       "Action": [
         "iam:CreateRole",
