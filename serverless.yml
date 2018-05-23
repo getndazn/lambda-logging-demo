@@ -37,7 +37,7 @@ functions:
     description: Sets the log retention policy to the specified no. of days
     memorySize: 128
     environment:
-      retention_days: 7
+      retention_days: ${env:RETENTION_DAYS}
     iamRoleStatements:
       - Effect: "Allow"
         Action:

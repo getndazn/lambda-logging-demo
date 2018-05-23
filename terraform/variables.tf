@@ -47,6 +47,11 @@ variable "tags" {
   type = "map"
 }
 
+variable "retention_days" {
+  default = "90"
+  description = "how long should logs be stored in cloudwatch"
+}
+
 variable "cloudwatch_logs_prefixes" {
   type = "list"
   description = "List of prefiex that will be used to filter logs in cloudwatch that should be shipped to logz.io"

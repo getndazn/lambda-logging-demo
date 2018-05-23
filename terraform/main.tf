@@ -55,6 +55,12 @@ resource "aws_codebuild_project" "dazndev_build" {
     }
 
     environment_variable {
+      name  = "RETENTION_DAYS"
+      value = "${var.retention_days}"
+    }
+
+
+    environment_variable {
       name  = "NAME"
       value = "${var.name}"
     }
