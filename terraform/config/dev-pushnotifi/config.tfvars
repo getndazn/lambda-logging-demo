@@ -8,13 +8,13 @@ lambda_git_owner = "getndazn"
 
 stage = "dev"
 
-lambda_git_branch = "master"
+lambda_git_branch = "feature/AN-1675" # TODO change to master before merge
 
 tags = {
   Application = "dazndev"
   Description = "log shipping lambda"
 }
 
-cloudwatch_logs_prefix = "pushnotifi_dev"
+cloudwatch_logs_prefixes = [ "pushnotifi_dev" ]
 
 name = "pushnotifi-logs"
