@@ -15,6 +15,6 @@ tags = {
   Description = "log shipping lambda"
 }
 
-cloudwatch_logs_prefix = [ "/aws/lambda" ]
+cloudwatch_logs_prefixes = [ "/aws/lambda" ]
 
 name = "cloudwatch-logs"
