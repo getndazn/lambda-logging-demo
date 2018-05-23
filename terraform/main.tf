@@ -1,5 +1,5 @@
 resource "aws_s3_bucket" "source" {
-  bucket = "${var.stage}-${var.name}-pipeline-lambdas"
+  bucket = "${var.stage}-${var.name}-pipeline-pushnotifi"
   acl    = "private"
 
   tags = "${var.tags}"
