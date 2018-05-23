@@ -24,7 +24,8 @@ variable "ssm_logz_io_token_key" {
 
 variable "lambda_git_branch" {
   description = "Branch from which lambda sohuld be deployed"
-  default     = "master"
+  # default     = "master"
+  default = "feature/naming-fix"
 }
 
 variable "lambda_git_owner" {
@@ -49,4 +50,26 @@ variable "tags" {
 variable "cloudwatch_logs_prefixes" {
   type = "list"
   description = "List of prefiex that will be used to filter logs in cloudwatch that should be shipped to logz.io"
+  default = [
+    "/aws/lambda/be_dev_jappred-web",
+    "/aws/lambda/be_dev_rs-translations-web-api",
+    "/aws/lambda/be_dev_rs-web",
+    "/aws/lambda/be_dev_rs-articles",
+    "/aws/lambda/be_dev_rs-labels",
+    "/aws/lambda/be_dev_s3-buckets-replication",
+    "/aws/lambda/be_dev_push-notification-device-registration",
+    "/aws/lambda/be_dev_push-notification-sender",
+
+    "/aws/lambda/be_stage_jappred-web",
+    "/aws/lambda/be_stage_rs-translations-web-api",
+    "/aws/lambda/be_stage_rs-web",
+    "/aws/lambda/be_stage_rs-articles",
+    "/aws/lambda/be_stage_rs-labels",
+    "/aws/lambda/be_stage_s3-buckets-replication",
+    "/aws/lambda/be_stage_push-notification-device-registration",
+    "/aws/lambda/be_stage_push-notification-sender",
+
+    "pushnotifi_dev",
+    "pushnotifi_stage"
+  ]
 }
