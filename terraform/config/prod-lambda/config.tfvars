@@ -16,3 +16,5 @@ tags = {
 }
 
 cloudwatch_logs_prefix = [ "/aws/lambda" ]
+
+name = "cloudwatch-logs"
