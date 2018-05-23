@@ -6,6 +6,7 @@ data "template_file" "codebuild_policy" {
 
   vars {
     region = "${var.aws_region}"
+    name = "${var.name}"
     stage = "${var.stage}"
     accountId = "${data.aws_caller_identity.current.account_id}"
   }

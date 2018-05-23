@@ -1,4 +1,4 @@
-service: cloudwatch-logs
+service: ${env:NAME}
 
 plugins:
  - serverless-pseudo-parameters
@@ -63,7 +63,7 @@ functions:
     environment:
       dest_func: "${self:service}-${self:provider.stage}-ship-logs-to-logzio"
       account_id: "#{AWS::AccountId}"
-      prefix: ${env:CLOUDWATCH_LOGS_PREFIX}
+      prefixes: ${env:CLOUDWATCH_LOGS_PREFIXES}
     iamRoleStatements:
       - Effect: "Allow"
         Action:
