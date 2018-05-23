@@ -51,8 +51,14 @@ resource "aws_codebuild_project" "dazndev_build" {
 
     environment_variable {
       name  = "CLOUDWATCH_LOGS_PREFIX"
-      value = "${var.cloudwatch_logs_prefix}"
+      value = "${join(",", var.cloudwatch_logs_prefixes)}"
     }
+
+    environment_variable {
+      name  = "NAME"
+      value = "${var.name}"
+    }
+
   }
 
   source {

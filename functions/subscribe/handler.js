@@ -6,7 +6,7 @@ const AWS            = require('aws-sdk');
 const cloudWatchLogs = Promise.promisifyAll(new AWS.CloudWatchLogs());
 const accountId      = process.env.account_id;
 const region         = AWS.config.region;
-const prefix         = process.env.prefix;
+const prefixes       = process.env.prefixes.split(",");
 
 function getDestFuncArn() {
   // a Lambda function ARN looks like this:
@@ -40,7 +40,7 @@ let subscribe = function* (logGroupName) {
 
 module.exports.handler = co.wrap(function* (event, context, callback) {
   console.log(JSON.stringify(event));
-  
+
   // eg. /aws/lambda/logging-demo-dev-api
   let logGroupName = event.detail.requestParameters.logGroupName;
   console.log(`log group: ${logGroupName}`);
@@ -51,13 +51,17 @@ module.exports.handler = co.wrap(function* (event, context, callback) {
   if (logGroupName === `/aws/lambda/${destFuncName}`) {
     console.log(`ignoring the log group for [${destFuncName}] function to avoid invocation loop!`);
     callback(null, 'ignored');
-  } else if (prefix && !logGroupName.startsWith(prefix)) {
-    console.log(`ignoring the log group [${logGroupName}] before it doesn't match the prefix [${prefix}]`);
+  } else if ( !isLogGroupAllowed(logGroupName) ) {
+    console.log(`ignoring the log group [${logGroupName}] before it doesn't match the prefixes [${prefixes}]`);
     callback(null, 'ignored');
   } else {
     yield subscribe(logGroupName);
     console.log(`subscribed [${logGroupName}] to [${destFuncArn}]`);
-  
+
     callback(null, 'ok');
   }
 });
+
+function isLogGroupAllowed(prefixes, logGroupName) {
+  return prefixes.some( prefix => logGroupName.startsWith(prefix))
+}

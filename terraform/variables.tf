@@ -46,6 +46,7 @@ variable "tags" {
   type = "map"
 }
 
-variable "cloudwatch_logs_prefix" {
-  description = "This prefix will be used to filter logs in cloudwatch that should be shipped to logz.io"
+variable "cloudwatch_logs_prefixes" {
+  type = "list"
+  description = "List of prefiex that will be used to filter logs in cloudwatch that should be shipped to logz.io"
 }

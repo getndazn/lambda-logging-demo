@@ -8,13 +8,13 @@ lambda_git_owner = "getndazn"
 
 stage = "dev"
 
-lambda_git_branch = "master"
+lambda_git_branch = "feature/naming-fix"
 
 tags = {
   Application = "dazndev"
   Description = "log shipping lambda"
 }
 
-cloudwatch_logs_prefix = "/aws/lambda"
+cloudwatch_logs_prefix = [ "/aws/lambda" ]
 
 name = "all-lambda-logs"
