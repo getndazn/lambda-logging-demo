@@ -16,3 +16,5 @@ tags = {
 }
 
 cloudwatch_logs_prefix = "pushnotifi_dev"
+
+name = "pushnotifi-logs"
