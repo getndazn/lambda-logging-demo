@@ -31,7 +31,8 @@ let tryParseJson = function (str) {
 let parseLogMessage = function (logEvent) {
   if (logEvent.message.startsWith('START RequestId') ||
       logEvent.message.startsWith('END RequestId') ||
-      logEvent.message.startsWith('REPORT RequestId')) {
+      logEvent.message.startsWith('REPORT RequestId') ||
+      isMonitoringMsg(logEvent.message)) {
 
     return null;
   }
@@ -44,11 +45,6 @@ let parseLogMessage = function (logEvent) {
   let fields = tryParseJson(event);
 
   if (fields) {
-
-    if ( fields && (fields.message || "").startsWith("MONITORING|") ) {
-      return null;
-    }
-
     fields.requestId = requestId;
 
     let level = 'debug';
@@ -71,6 +67,25 @@ let parseLogMessage = function (logEvent) {
     };
   }
 };
+
+function isMonitoringMsg(msg) {
+  if (!msg) {
+      return false;
+  }
+
+  const split = msg.split(/\s/);
+
+  console.log(split);
+  if ( split.length < 3 ) {
+      return false;
+  }
+
+  if ( !split[2].startsWith('MONITORING|') ) {
+      return false
+  }
+
+  return true;
+}
 
 module.exports = {
   functionName,
