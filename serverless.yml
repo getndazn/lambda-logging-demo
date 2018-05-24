@@ -12,7 +12,7 @@ provider:
   versionFunctions: true
 
 functions:
-  ship-logs-to-logzio:
+  ship-logs:
     handler: functions/ship-logs/handler.handler
     description: Sends CloudWatch logs to Logz.io
     memorySize: 128
@@ -58,10 +58,10 @@ functions:
 
   subscribe:
     handler: functions/subscribe/handler.handler
-    description: Subscribe logs to the ship-logs-to-logzio function
+    description: Subscribe logs to the ship-logs function
     memorySize: 128
     environment:
-      dest_func: "${self:service}-${self:provider.stage}-ship-logs-to-logzio"
+      dest_func: "${self:service}-${self:provider.stage}-ship-logs"
       account_id: "#{AWS::AccountId}"
       prefixes: ${env:CLOUDWATCH_LOGS_PREFIXES}
     iamRoleStatements:

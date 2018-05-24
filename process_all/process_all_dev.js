@@ -2,7 +2,7 @@
 
 const regions = [ "us-east-1" ];
 const accountId = "144992683770";
-const shipLogsFuncName = "cloudwatch-logs-dev-ship-logs-to-logzio";
+const shipLogsFuncName = "cloudwatch-logs-dev-ship-logs";
 const prefixes = [
   "/aws/lambda/be_dev_jappred-web",
   "/aws/lambda/be_dev_rs-translations-web-api",
@@ -17,3 +17,5 @@ const prefixes = [
 ];
 
 require('./process_all').processAll(shipLogsFuncName, accountId, regions, prefixes);
+
+

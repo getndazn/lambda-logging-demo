@@ -59,7 +59,6 @@ resource "aws_codebuild_project" "dazndev_build" {
       value = "${var.retention_days}"
     }
 
-
     environment_variable {
       name  = "NAME"
       value = "${var.name}"

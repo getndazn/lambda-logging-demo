@@ -3,7 +3,7 @@
 const regions = [ "us-east-1", "eu-central-1" ];
 
 const accountId = "728650748678";
-const shipLogsFuncName = "cloudwatch-logs-prod-ship-logs-to-logzio";
+const shipLogsFuncName = "cloudwatch-logs-prod-ship-logs";
 const prefixes = [
   "/aws/lambda/be_prod_jappred-web",
   "/aws/lambda/be_prod_rs-translations-web-api",
