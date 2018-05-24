@@ -66,7 +66,7 @@ const processRegion = co.wrap(function* (funcName, accountId, region, prefix) {
 
   let process = co.wrap(function* () {
     let logGroups = yield listLogGroups([]);
-    console.log(`log groups are ${logGroups}`);
+
     for (let logGroupName of logGroups) {
       console.log(`[${region}] subscribing [${logGroupName}]...`);
       yield subscribe(logGroupName);
