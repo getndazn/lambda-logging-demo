@@ -31,8 +31,7 @@ let tryParseJson = function (str) {
 let parseLogMessage = function (logEvent) {
   if (logEvent.message.startsWith('START RequestId') ||
       logEvent.message.startsWith('END RequestId') ||
-      logEvent.message.startsWith('REPORT RequestId') ||
-      logEvent.message.startsWith('MONITORING|')) {
+      logEvent.message.startsWith('REPORT RequestId')) {
 
     return null;
   }
@@ -43,7 +42,13 @@ let parseLogMessage = function (logEvent) {
   let event     = parts[2];
 
   let fields = tryParseJson(event);
+
   if (fields) {
+
+    if ( fields && (fields.message || "").startsWith("MONITORING|") ) {
+      return null;
+    }
+
     fields.requestId = requestId;
 
     let level = 'debug';
