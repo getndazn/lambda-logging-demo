@@ -39,7 +39,7 @@ variable "lambda_git_repo" {
 }
 
 variable "name" {
-  description = "Name taht will be used by pipeline and other resrouces"
+  description = "Name that will be used by pipeline and other resrouces"
   default     = "logz-integration-lambda"
 }
 
