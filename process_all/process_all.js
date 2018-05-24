@@ -2,27 +2,21 @@
 
 const co      = require('co');
 const Promise = require('bluebird');
-const AWS     = require('aws-sdk');
 
 const retentionDays = 90;
 
-module.exports.processAll = (shipLogsFuncName, accountId, regions, prefixes) => {
-  regions.forEach( region => {
-    prefixes.forEach( prefix => {
 
-      processRegion(shipLogsFuncName, accountId, region, prefix);
-    });
-  });
-};
-
-
-function processRegion(funcName, accountId, region, prefix) {
-  AWS.config.region = region;
+const processRegion = co.wrap(function* (funcName, accountId, region, prefix) {
+  console.log(`started processing region ${region} and prefix ${prefix}`);
   const destFuncArn = `arn:aws:lambda:${region}:${accountId}:function:${funcName}`;
+
+  const AWS = require('aws-sdk');
+  AWS.config.region = region;
   const cloudWatchLogs = new AWS.CloudWatchLogs();
   const lambda         = new AWS.Lambda();
 
   let listLogGroups = co.wrap(function* (acc, nextToken) {
+
     let req = {
       limit: 50,
       logGroupNamePrefix: prefix,
@@ -72,6 +66,7 @@ function processRegion(funcName, accountId, region, prefix) {
 
   let process = co.wrap(function* () {
     let logGroups = yield listLogGroups([]);
+    console.log(`log groups are ${logGroups}`);
     for (let logGroupName of logGroups) {
       console.log(`[${region}] subscribing [${logGroupName}]...`);
       yield subscribe(logGroupName);
@@ -82,4 +77,13 @@ function processRegion(funcName, accountId, region, prefix) {
   });
 
   process().then(_ => console.log(`done for ${region} and prefix ${prefix}`));
-}
+});
+
+module.exports.processAll = co.wrap(function* (shipLogsFuncName, accountId, regions, prefixes) {
+  regions.forEach(co.wrap(function* (region) {
+    prefixes.forEach(co.wrap(function* (prefix) {
+
+      yield processRegion(shipLogsFuncName, accountId, region, prefix);
+    }));
+  }));
+});

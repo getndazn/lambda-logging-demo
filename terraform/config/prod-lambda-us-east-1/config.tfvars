@@ -20,6 +20,7 @@ cloudwatch_logs_prefixes = [
     "/aws/lambda/be_prod_s3-buckets-replication",
     "/aws/lambda/be_prod_push-notification-device-registration",
     "/aws/lambda/be_prod_push-notification-sender",
+    "/aws/lambda/be_prod_notifi",
 
     "pushnotifi_prod"
   ]

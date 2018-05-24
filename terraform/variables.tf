@@ -64,6 +64,7 @@ variable "cloudwatch_logs_prefixes" {
     "/aws/lambda/be_dev_s3-buckets-replication",
     "/aws/lambda/be_dev_push-notification-device-registration",
     "/aws/lambda/be_dev_push-notification-sender",
+    "/aws/lambda/be_dev_notifi",
 
     "/aws/lambda/be_stage_jappred-web",
     "/aws/lambda/be_stage_rs-translations-web-api",
@@ -73,6 +74,7 @@ variable "cloudwatch_logs_prefixes" {
     "/aws/lambda/be_stage_s3-buckets-replication",
     "/aws/lambda/be_stage_push-notification-device-registration",
     "/aws/lambda/be_stage_push-notification-sender",
+    "/aws/lambda/be_stage_notifi",
 
     "pushnotifi_dev",
     "pushnotifi_stage"
