@@ -33,7 +33,7 @@ let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
 
       for (let logEvent of logEvents) {
         try {
-          let log = parse.logMessage(logEvent);
+          let log = parse.logMessage(logGroup, logEvent);
           if (log) {
             log.logStream     = logStream;
             log.logGroup      = logGroup;

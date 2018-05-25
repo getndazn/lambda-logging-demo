@@ -41,7 +41,7 @@ let tryParseJson = function (str) {
 //    "START RequestId: 67c005bb-641f-11e6-b35d-6b6c651a2f01 Version: 31\n"
 //    "END RequestId: 5e665f81-641f-11e6-ab0f-b1affae60d28\n"
 //    "REPORT RequestId: 5e665f81-641f-11e6-ab0f-b1affae60d28\tDuration: 1095.52 ms\tBilled Duration: 1100 ms \tMemory Size: 128 MB\tMax Memory Used: 32 MB\t\n"
-let parseLogMessage = function (logEvent) {
+let parseLogMessage = function (logGroup, logEvent) {
   if (logEvent.message.startsWith('START RequestId') ||
       logEvent.message.startsWith('END RequestId') ||
       logEvent.message.startsWith('REPORT RequestId') ||
@@ -50,30 +50,29 @@ let parseLogMessage = function (logEvent) {
     return null;
   }
 
-  const { timestamp, requestId, event } = extractFromEvent(logEvent);
-
-  if (fields) {
-    fields.requestId = requestId;
-
-    let level = 'debug';
-    if (fields.level) {
-      level = JSON.stringify(fields.level);
-    }
-
-    let message = fields.message;
-
-    // level and message are lifted out, so no need to keep them there
-    delete fields.level;
-    delete fields.message;
-
-    return { level, message, fields, '@timestamp': new Date(timestamp) };
-  } else {
+  const fields = extractFromEvent(logGroup, logEvent);
+  if (!fields) {
     return {
       level        : 'debug',
-      message      : event,
-      '@timestamp' : new Date(timestamp)
+      message      : logEvent,
+      '@timestamp' : new Date()
     };
   }
+
+  const { timestamp, requestId, event } = fields;
+  let level = fields.level || fields.sLevel || 'debug';
+  if (fields.level || fields.sLevel ) {
+    level = JSON.stringify(fields.level || fields.sLevel);
+  }
+
+  let message = fields.message;
+
+  // level and message are lifted out, so no need to keep them there
+  delete fields.level;
+  delete fields.message;
+
+  return { level, message, fields, '@timestamp': new Date(timestamp) };
+
 };
 
 function extractFromEvent(logGroup, logEvent) {
@@ -91,7 +90,7 @@ function extractFromEvent(logGroup, logEvent) {
     }
   }
 
-  const event = tryParseJson(logEvent)
+  const event = tryParseJson(logEvent.message);
   if (!event) {
     return null;
   }
@@ -110,7 +109,6 @@ function isMonitoringMsg(msg) {
 
   const split = msg.split(/\s/);
 
-  console.log(split);
   if ( split.length < 3 ) {
       return false;
   }
