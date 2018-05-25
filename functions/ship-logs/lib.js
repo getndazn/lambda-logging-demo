@@ -17,9 +17,9 @@ const ssmParams = {
 let token;
 
 let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
-  let version = parse.version(logStream);
+  let version = parse.version(logGroup, logStream);
   let name  = parse.name(logGroup);
-  let isLambda = parse.isLambda(logStream);
+  let isLambda = parse.isLambda(logGroup);
 
   if ( !token ) {
     token = yield ssm.getParameter(ssmParams)
