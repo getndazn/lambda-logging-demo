@@ -61,9 +61,9 @@ let parseLogMessage = function (logGroup, logEvent) {
   }
 
   const { timestamp, requestId, event } = fields;
-  let level = fields.sLevel || 'debug';
-  if ( !fields.sLevel && fields.level ) {
-    level = JSON.stringify(fields.level);
+  let level = fields.level;
+  if ( !level ) {
+    level = 30;
   }
 
   let message = fields.message;

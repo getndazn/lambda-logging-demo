@@ -34,7 +34,7 @@ describe('Logs parsing should', () => {
         const parsed = logMessage(logGroup, event);
         expect(parsed).to.exist();
 
-        expect(parsed.level).to.equal('debug');
+        expect(parsed.level).to.equal(30);
         expect(parsed.fields.requestId).to.equal('233561b4-5ff4-11e8-b529-d3e3b353d379');
         expect(parsed.fields.timestamp).to.equal('2018-05-25T08:18:00.304Z');
         expect(parsed.fields.event.message).to.equal('Successful download from S3 bucket');
@@ -64,7 +64,7 @@ describe('Logs parsing should', () => {
         const parsed = logMessage(logGroup, event);
         expect(parsed).to.exist();
 
-        expect(parsed.level).to.equal('debug');
+        expect(parsed.level).to.equal(30);
         expect(parsed.fields.requestId).to.equal('n/a');
         expect(parsed.fields.timestamp).to.equal('2018-05-25T09:22:43.502Z');
         expect(parsed.fields.event.msg).to.equal('Started adding reminders of user c7a5389d-d250-4168-80d9-a0bed9a68de1 for device 5b12af4029dfdd1f');
