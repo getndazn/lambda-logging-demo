@@ -50,12 +50,7 @@ let parseLogMessage = function (logEvent) {
     return null;
   }
 
-  let parts     = logEvent.message.split('\t', 3);
-  let timestamp = parts[0];
-  let requestId = parts[1];
-  let event     = parts[2];
-
-  let fields = tryParseJson(event);
+  const { timestamp, requestId, event } = extractFromEvent(logEvent);
 
   if (fields) {
     fields.requestId = requestId;
@@ -81,6 +76,33 @@ let parseLogMessage = function (logEvent) {
   }
 };
 
+function extractFromEvent(logGroup, logEvent) {
+
+  if (isLambda(logGroup)) {
+    const parts     = logEvent.message.split('\t', 3);
+    const timestamp = parts[0];
+    const requestId = parts[1];
+    const event     = parts[2];
+
+    return {
+      timestamp,
+      requestId,
+      event: tryParseJson(event)
+    }
+  }
+
+  const event = tryParseJson(logEvent)
+  if (!event) {
+    return null;
+  }
+
+  return {
+      timestamp: event.time,
+      requestId: "n/a",
+      event
+  }
+}
+
 function isMonitoringMsg(msg) {
   if (!msg) {
       return false;
@@ -94,7 +116,7 @@ function isMonitoringMsg(msg) {
   }
 
   if ( !split[2].startsWith('MONITORING|') ) {
-      return false
+      return false;
   }
 
   return true;
