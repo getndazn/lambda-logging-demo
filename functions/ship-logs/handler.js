@@ -39,7 +39,6 @@ module.exports.handler = co.wrap(function* (event, context, callback) {
     // }
     let logEvent = JSON.parse(json);
 
-    console.log('\nGot log event: ', json);
     yield processAll(logEvent.logGroup, logEvent.logStream, logEvent.logEvents);
     callback(null, `Successfully processed ${logEvent.logEvents.length} log events.`);
   } catch (err) {
