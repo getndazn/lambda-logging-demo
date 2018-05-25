@@ -8,6 +8,10 @@ A group of Lambda functions for:
 
 ## Deployment with code pipeline
 
+For now this is not deployed on den and stage because of qouta limits on logz.io
+
+This deployments are working for new log groups, if you have already existing lambdas with log groups, then you should look at `process_all` directory and modify input parameters, it will create subscriptions for already existing lambdas.
+
 Deployment for lambda logs shipping, if you are adding another resource for which logs should be shipped then just add new directory under `terraform/deployment/config` and add new `remote` and `tfvars` files.
 
 Deployment needs encrypted logz.io token stored in parameter store, name of key from parameter store is passed into `/dev/lambda/logzio-token` variable.
@@ -37,7 +41,7 @@ You can generate such token in github settings page of your account.
 
 ## Deployment
 
-1. insert the `logstash_host`, `logstash_port` and `token` in the `serverless.yml` file (under the `ship-logs-to-logzio` function's environment variables).
+1. insert the `logstash_host`, `logstash_port` and `token` in the `serverless.yml` file (under the `ship-logs` function's environment variables).
 
 `token`: your Logz.io account token. Can be retrieved on the Settings page in the Logz.io UI.
 `logstash_host`: if you are in the EU region insert `listener-eu.logz.io`, otherwise, use `listener.logz.io`. You can tell which region you are in by checking your login URL - app.logz.io means you are in the US. app-eu.logz.io means you are in the EU.
@@ -46,7 +50,7 @@ You can generate such token in github settings page of your account.
 for example:
 
 ```
-ship-logs-to-logzio:
+ship-logs:
   handler: functions/ship-logs/handler.handler
   description: Sends CloudWatch logs to Logz.io
   environment:

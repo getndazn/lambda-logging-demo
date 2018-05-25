@@ -12,17 +12,16 @@ tags = {
 }
 
 cloudwatch_logs_prefixes = [
-    "/aws/lambda/be_prod_jappred-web",
-    "/aws/lambda/be_prod_rs-translations-web-api",
-    "/aws/lambda/be_prod_rs-web",
-    "/aws/lambda/be_prod_rs-articles",
-    "/aws/lambda/be_prod_rs-labels",
-    "/aws/lambda/be_prod_s3-buckets-replication",
-    "/aws/lambda/be_prod_push-notification-device-registration",
-    "/aws/lambda/be_prod_push-notification-sender",
-    "/aws/lambda/be_prod_notifi",
+  "/aws/lambda/be_prod_jappred-web",
+  "/aws/lambda/be_prod_rs-translations-web-api",
+  "/aws/lambda/be_prod_rs-web",
+  "/aws/lambda/be_prod_rs-articles",
+  "/aws/lambda/be_prod_rs-labels",
+  "/aws/lambda/be_prod_s3-buckets-replication",
+  "/aws/lambda/be_prod_push-notification-device-registration",
+  "/aws/lambda/be_prod_push-notification-sender",
+  "/aws/lambda/be_prod_notifi",
+  "pushnotifi_prod",
+]
 
-    "pushnotifi_prod"
-  ]
-
-name = "cw"
+name = "cloudwatch-logs"

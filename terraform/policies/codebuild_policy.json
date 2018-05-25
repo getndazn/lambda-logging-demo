@@ -11,6 +11,7 @@
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
+        "logs:DeleteLogGroup",
         "iam:PassRole",
         "iam:GetRole",
         "kms:DescribeKey",
