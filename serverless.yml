@@ -91,5 +91,5 @@ resources:
         FunctionName:
           Fn::Join:
             - ""
-            - - "Ref" : "ShipDashlogs"
+            - - "Ref" : "ShipDashlogsDashtoDashlogzioLambdaFunction"
         Principal: logs.#{AWS::Region}.amazonaws.com
