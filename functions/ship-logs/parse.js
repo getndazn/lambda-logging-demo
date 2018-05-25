@@ -31,6 +31,7 @@ let tryParseJson = function (str) {
   try {
     return JSON.parse(str);
   } catch (e) {
+    console.log('Error: unable to parse ', str);
     return null;
   }
 };
