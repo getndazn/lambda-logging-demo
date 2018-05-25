@@ -1,17 +1,30 @@
 'use strict';
 
+
+let isLambda = function(logGroup) {
+  return logGroup.includes('/aws/lambda/');
+}
+
 // logGroup looks like this:
 //    "logGroup": "/aws/lambda/service-env-funcName"
-let functionName = function (logGroup) {
-  return logGroup.split('/').reverse()[0];
+let name = function (logGroup) {
+  if (isLambda(logGroup) ) {
+    return logGroup.split('/').reverse()[0];
+  }
+
+  return logGroup;
 };
 
 // logStream looks like this:
 //    "logStream": "2016/08/17/[76]afe5c000d5344c33b5d88be7a4c55816"
-let lambdaVersion = function (logStream) {
-  let start = logStream.indexOf('[');
-  let end = logStream.indexOf(']');
-  return logStream.substring(start+1, end);
+let version = function (logGroup, logStream) {
+  if (isLambda(logGroup) ) {
+    let start = logStream.indexOf('[');
+    let end = logStream.indexOf(']');
+    return logStream.substring(start+1, end);
+  }
+
+  return "n/a";
 };
 
 let tryParseJson = function (str) {
@@ -88,7 +101,8 @@ function isMonitoringMsg(msg) {
 }
 
 module.exports = {
-  functionName,
-  lambdaVersion,
+  name,
+  version,
+  isLambda,
   logMessage: parseLogMessage
 };
