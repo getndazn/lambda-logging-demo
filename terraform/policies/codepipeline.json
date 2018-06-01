@@ -41,33 +41,6 @@
       ],
       "Resource": "*",
       "Effect": "Allow"
-    },
-    {
-      "Action": "iam:PassRole",
-      "Effect": "Allow",
-      "Resource": [
-        "*"
-      ],
-      "Condition": {
-        "StringLike": {
-          "iam:PassedToService": "ecs-tasks.amazonaws.com"
-        }
-      }
-    },
-    {
-      "Action": "iam:PassRole",
-      "Effect": "Allow",
-      "Resource": [
-        "arn:aws:iam::*:role/ecsInstanceRole*"
-      ],
-      "Condition": {
-        "StringLike": {
-          "iam:PassedToService": [
-            "ec2.amazonaws.com",
-            "ec2.amazonaws.com.cn"
-          ]
-        }
-      }
     }
   ]
 }

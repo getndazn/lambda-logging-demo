@@ -7,15 +7,19 @@
         "*"
       ],
       "Action": [
+        "logs:DescribeLogGroups",
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents",
+        "logs:DeleteLogGroup",
         "iam:PassRole",
         "iam:GetRole",
         "kms:DescribeKey",
         "kms:Decrypt",
         "cloudformation:*",
         "events:DescribeRule",
+        "events:PutRule",
+        "events:PutTargets",
         "ssm:GetParameters",
         "ssm:GetParameter",
         "lambda:*",
@@ -25,7 +29,7 @@
     {
       "Effect" : "Allow",
       "Resource": [
-        "arn:aws:iam::${accountId}:role/cloudwatch-logs-${stage}-ship-logs-to-logzio-${region}-lambdaRole"
+        "arn:aws:iam::${accountId}:role/${name}-${stage}-*${region}-lambdaRole"
       ],
       "Action": [
         "iam:CreateRole",

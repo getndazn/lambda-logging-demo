@@ -17,8 +17,9 @@ const ssmParams = {
 let token;
 
 let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
-  let lambdaVersion = parse.lambdaVersion(logStream);
-  let functionName  = parse.functionName(logGroup);
+  let version = parse.version(logGroup, logStream);
+  let name  = parse.name(logGroup);
+  let isLambda = parse.isLambda(logGroup);
 
   if ( !token ) {
     token = yield ssm.getParameter(ssmParams)
@@ -32,15 +33,16 @@ let processAll = co.wrap(function* (logGroup, logStream, logEvents) {
 
       for (let logEvent of logEvents) {
         try {
-          let log = parse.logMessage(logEvent);
+          let log = parse.logMessage(logGroup, logEvent);
           if (log) {
             log.logStream     = logStream;
             log.logGroup      = logGroup;
-            log.functionName  = functionName;
-            log.lambdaVersion = lambdaVersion;
+            log.name          = name;
+            log.version       = version;
             log.fields        = log.fields || {};
             log.type          = "cloudwatch";
             log.token         = token;
+            log.isLambda      = isLambda;
 
             socket.write(JSON.stringify(log) + '\n');
           }

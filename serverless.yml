@@ -1,4 +1,4 @@
-service: cloudwatch-logs
+service: ${env:NAME}
 
 plugins:
  - serverless-pseudo-parameters
@@ -12,7 +12,7 @@ provider:
   versionFunctions: true
 
 functions:
-  ship-logs-to-logzio:
+  ship-logs:
     handler: functions/ship-logs/handler.handler
     description: Sends CloudWatch logs to Logz.io
     memorySize: 128
@@ -37,7 +37,7 @@ functions:
     description: Sets the log retention policy to the specified no. of days
     memorySize: 128
     environment:
-      retention_days: 7
+      retention_days: ${env:RETENTION_DAYS}
     iamRoleStatements:
       - Effect: "Allow"
         Action:
@@ -58,12 +58,12 @@ functions:
 
   subscribe:
     handler: functions/subscribe/handler.handler
-    description: Subscribe logs to the ship-logs-to-logzio function
+    description: Subscribe logs to the ship-logs function
     memorySize: 128
     environment:
-      dest_func: "${self:service}-${self:provider.stage}-ship-logs-to-logzio"
+      dest_func: "${self:service}-${self:provider.stage}-ship-logs"
       account_id: "#{AWS::AccountId}"
-      prefix: ${env:CLOUDWATCH_LOGS_PREFIX}
+      prefixes: ${env:CLOUDWATCH_LOGS_PREFIXES}
     iamRoleStatements:
       - Effect: "Allow"
         Action:
@@ -91,5 +91,5 @@ resources:
         FunctionName:
           Fn::Join:
             - ""
-            - - "Ref" : "ShipDashlogsDashtoDashlogzioLambdaFunction"
+            - - "Ref" : "ShipDashlogsLambdaFunction"
         Principal: logs.#{AWS::Region}.amazonaws.com

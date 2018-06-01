@@ -1,23 +1,37 @@
 'use strict';
 
+
+let isLambda = function(logGroup) {
+  return logGroup.includes('/aws/lambda/');
+}
+
 // logGroup looks like this:
 //    "logGroup": "/aws/lambda/service-env-funcName"
-let functionName = function (logGroup) {
-  return logGroup.split('/').reverse()[0];
+let name = function (logGroup) {
+  if (isLambda(logGroup) ) {
+    return logGroup.split('/').reverse()[0];
+  }
+
+  return logGroup;
 };
 
 // logStream looks like this:
 //    "logStream": "2016/08/17/[76]afe5c000d5344c33b5d88be7a4c55816"
-let lambdaVersion = function (logStream) {
-  let start = logStream.indexOf('[');
-  let end = logStream.indexOf(']');
-  return logStream.substring(start+1, end);
+let version = function (logGroup, logStream) {
+  if (isLambda(logGroup) ) {
+    let start = logStream.indexOf('[');
+    let end = logStream.indexOf(']');
+    return logStream.substring(start+1, end);
+  }
+
+  return "n/a";
 };
 
 let tryParseJson = function (str) {
   try {
     return JSON.parse(str);
   } catch (e) {
+    console.log('Error: unable to parse ', str);
     return null;
   }
 };
@@ -28,46 +42,88 @@ let tryParseJson = function (str) {
 //    "START RequestId: 67c005bb-641f-11e6-b35d-6b6c651a2f01 Version: 31\n"
 //    "END RequestId: 5e665f81-641f-11e6-ab0f-b1affae60d28\n"
 //    "REPORT RequestId: 5e665f81-641f-11e6-ab0f-b1affae60d28\tDuration: 1095.52 ms\tBilled Duration: 1100 ms \tMemory Size: 128 MB\tMax Memory Used: 32 MB\t\n"
-let parseLogMessage = function (logEvent) {
+let parseLogMessage = function (logGroup, logEvent) {
   if (logEvent.message.startsWith('START RequestId') ||
       logEvent.message.startsWith('END RequestId') ||
-      logEvent.message.startsWith('REPORT RequestId')) {
+      logEvent.message.startsWith('REPORT RequestId') ||
+      isMonitoringMsg(logEvent.message)) {
 
     return null;
   }
 
-  let parts     = logEvent.message.split('\t', 3);
-  let timestamp = parts[0];
-  let requestId = parts[1];
-  let event     = parts[2];
-
-  let fields = tryParseJson(event);
-  if (fields) {
-    fields.requestId = requestId;
-
-    let level = 'debug';
-    if (fields.level) {
-      level = JSON.stringify(fields.level);
-    }
-
-    let message = fields.message;
-
-    // level and message are lifted out, so no need to keep them there
-    delete fields.level;
-    delete fields.message;
-
-    return { level, message, fields, '@timestamp': new Date(timestamp) };
-  } else {
+  const fields = extractFromEvent(logGroup, logEvent);
+  if (!fields) {
     return {
       level        : 'debug',
-      message      : event,
-      '@timestamp' : new Date(timestamp)
+      message      : logEvent,
+      '@timestamp' : new Date()
     };
   }
+
+  const { timestamp, requestId, event } = fields;
+  let level = fields.level;
+  if ( !level ) {
+    level = 30;
+  }
+
+  let message = fields.message;
+
+  // level and message are lifted out, so no need to keep them there
+  delete fields.level;
+  delete fields.message;
+
+  return { level, message, fields, '@timestamp': new Date(timestamp) };
+
 };
 
+function extractFromEvent(logGroup, logEvent) {
+
+  if (isLambda(logGroup)) {
+    const parts     = logEvent.message.split('\t', 3);
+    const timestamp = parts[0];
+    const requestId = parts[1];
+    const event     = parts[2];
+
+    return {
+      timestamp,
+      requestId,
+      event: tryParseJson(event)
+    }
+  }
+
+  const event = tryParseJson(logEvent.message);
+  if (!event) {
+    return null;
+  }
+
+  return {
+      timestamp: event.time,
+      requestId: "n/a",
+      event
+  }
+}
+
+function isMonitoringMsg(msg) {
+  if (!msg) {
+      return false;
+  }
+
+  const split = msg.split(/\s/);
+
+  if ( split.length < 3 ) {
+      return false;
+  }
+
+  if ( !split[2].startsWith('MONITORING|') ) {
+      return false;
+  }
+
+  return true;
+}
+
 module.exports = {
-  functionName,
-  lambdaVersion,
+  name,
+  version,
+  isLambda,
   logMessage: parseLogMessage
 };
