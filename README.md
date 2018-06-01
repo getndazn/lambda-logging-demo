@@ -5,11 +5,11 @@ A group of Lambda functions for:
 * auto-subscribe new log groups to the aforementioned function so you don't have to subscribe them manually
 * auto-updates the retention policy of new log groups to 7 days (configurable)
 
-as for autosubscribe untion it does not work for existing log groups so you should run scripts from `process_all` directory if adding logs to existing resources.
+as for autosubscribe action it does not work for existing log groups so you should run scripts from `process_all` directory if adding logs to existing resources.
 
 ## Deployment with code pipeline
 
-For now this is not deployed on den and stage because of qouta limits on logz.io
+For now this is not deployed on dev and stage because of qouta limits on logz.io
 
 This deployments are working for new log groups, if you have already existing lambdas with log groups, then you should look at `process_all` directory and modify input parameters, it will create subscriptions for already existing lambdas.
 
